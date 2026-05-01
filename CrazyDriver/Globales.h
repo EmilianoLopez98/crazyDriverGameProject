@@ -4,6 +4,7 @@
 #include <Arduino.h>
 #include <SD.h>
 #include <SPI.h>
+#include <ArduinoJson.h>
 
 //Pines
 #define PIN_JOY_X 34
@@ -30,6 +31,7 @@ extern Estado estadoActual;
 extern int playerX;
 extern int opcionSeleccionada;
 extern int score;
+extern int listaScores[4];
 extern int highScore;
 
 //También lista de obstáculos para que el .ino pueda dibujarlos

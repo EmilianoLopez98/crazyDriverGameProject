@@ -58,16 +58,19 @@ void dibujarScore(int score) {
     u8g2.print(score);
 }
 
-void dibujarMarcadores(int record) {
+void dibujarMarcadores() {
   u8g2.setFont(u8g2_font_haxrcorp4089_tr);
-  u8g2.drawStr(30, 20, "TOP RECORD");
+  u8g2.drawStr(35, 12, "TOP SCORES");
 
-  u8g2.setFont(u8g2_font_ncenB14_tr); //Fuente grande para el número
-  u8g2.setCursor(45, 45);
-  u8g2.print(record);
+  for (int i = 0; i < 4; i++) {
+    u8g2.setCursor(40, 25 + (i * 10));
+    u8g2.print(i + 1);
+    u8g2.print(". ");
+    u8g2.print(listaScores[i]);
+  }
 
   u8g2.setFont(u8g2_font_5x7_tr);
-  u8g2.drawStr(1, 60, "BOTON ROJO PARA VOLVER");
-} 
+  u8g2.drawStr(1, 62, "BOTON ROJO PARA VOLVER");
+}
 
 #endif

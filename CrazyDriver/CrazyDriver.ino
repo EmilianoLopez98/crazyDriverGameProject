@@ -22,11 +22,9 @@ void setup() {
   pinMode(PIN_BUZZER, OUTPUT);
 
   if (!SD.begin(PIN_SD_CS)) {
-    Serial.println("¡No se encontró la tarjeta SD!");
-  }
-  else {
-    Serial.println("Tarjeta SD lista.");
-    highScore = leerMejorPuntaje(); //Cargamos el récord al iniciar
+    Serial.println("Error SD");
+  } else {
+    cargarScores();
   }
 }
 
@@ -47,11 +45,12 @@ void loop() {
     musicaMenu();
   }
   else if (estadoActual == MARCADORES) {
-    dibujarMarcadores(highScore);
+    dibujarMarcadores();
     musicaMenu();
   }
   else if (estadoActual == PAUSA) {
     u8g2.drawStr(35, 35, "PAUSA");
+    u8g2.drawStr(1, 55, "BOTON ROJO PARA REINICIAR");
   }
   else if (estadoActual == GAMEOVER) {
     u8g2.drawStr(25, 15, "HAZ PERDIDO");

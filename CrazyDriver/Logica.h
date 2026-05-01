@@ -100,6 +100,10 @@ void leerEntradas() {
       if (opcionSeleccionada == 0) estadoActual = JUGANDO;
       else if (opcionSeleccionada == 1) estadoActual = MARCADORES;
     }
+    else if (estadoActual == PAUSA) {
+      reiniciarJuego();
+      estadoActual = MENU;
+    }
     else if (estadoActual == GAMEOVER || estadoActual == MARCADORES) {
       reiniciarJuego();
       estadoActual = MENU;
@@ -154,39 +158,67 @@ void actualizarPosicionObstaculos() {
       if (listaObstaculos[i].y > 64) {
         listaObstaculos[i].activo = false; //Lo desactivamos para reusarlo
         score += 10; //¡10 puntos para Griffindor!
-        sonarBuzzer(2000); //Pitido agudo y rápido de recompensa
+        sonarBuzzer(2000);
       }
     }
   }
 }
 
-void guardarPuntaje(int nuevoPuntaje) {
-  //Intentar abrir el archivo de records/registros
-  File miArchivo = SD.open("/records.txt", FILE_APPEND);
+int listaScores[4] = {0, 0, 0, 0};
 
-  if(miArchivo) {
-    miArchivo.println(nuevoPuntaje);
-    miArchivo.close();
-    Serial.println("Puntaje guardado en SD.");
+void cargarScores() {
+  File file = SD.open("/records.json");
+  if (!file) {
+    Serial.println("No hay archivo JSON, usando ceros.");
+    return;
   }
-  else {
-    Serial.println("Error al abrir records.txt");
+
+  JsonDocument doc; 
+  DeserializationError error = deserializeJson(doc, file);
+
+  if (!error) {
+    JsonArray arr = doc["scores"];
+    for (int i = 0; i < 4; i++) {
+      listaScores[i] = arr[i] | 0;
+    }
+    highScore = listaScores[0];
   }
+  file.close();
 }
 
-int leerMejorPuntaje() {
-  File miArchivo = SD.open("/records.txt");
-  int maxScore = 0;
-
-  if(miArchivo) {
-    while (miArchivo.available()) {
-      //Leemos cada línea y buscamos la más alta
-      int valorActual = miArchivo.readStringUntil('\n').toInt();
-      if (valorActual > maxScore) maxScore = valorActual;
+void guardarPuntaje(int nuevoPuntaje) {
+  // 1. Lógica de inserción y ordenamiento
+  if (nuevoPuntaje > listaScores[3]) {
+    listaScores[3] = nuevoPuntaje;
+    for (int i = 0; i < 3; i++) {
+      for (int j = 0; j < 3 - i; j++) {
+        if (listaScores[j] < listaScores[j + 1]) {
+          int temp = listaScores[j];
+          listaScores[j] = listaScores[j + 1];
+          listaScores[j + 1] = temp;
+        }
+      }
     }
-    miArchivo.close();
   }
-  return maxScore;
+
+  // 2. Crear el JSON (Corregido para ArduinoJson V7)
+  JsonDocument doc;
+  JsonArray scoresNode = doc["scores"].to<JsonArray>(); 
+  
+  for (int i = 0; i < 4; i++) {
+    scoresNode.add(listaScores[i]);
+  }
+
+  // 3. Escribir en SD
+  File file = SD.open("/records.json", FILE_WRITE);
+  if (file) {
+    serializeJson(doc, file);
+    file.close();
+    highScore = listaScores[0];
+    Serial.println("JSON guardado correctamente.");
+  } else {
+    Serial.println("Error al abrir archivo para escribir.");
+  }
 }
 
 void comprobarColisiones() {
