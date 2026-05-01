@@ -13,6 +13,15 @@
 #define PIN_BUZZER 13
 #define PIN_SD_CS 5
 
+//Música
+#define NOTE_C4  262
+#define NOTE_G3  196
+#define NOTE_A3  220
+#define NOTE_B3  247
+#define NOTE_C5  523
+#define NOTE_E4  330
+#define NOTE_G4  392
+
 //Estados del juego
 enum Estado {INTRO, MENU, JUGANDO, PAUSA, GAMEOVER, MARCADORES};
 

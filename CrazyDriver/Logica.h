@@ -3,6 +3,46 @@
 
 #include "Globales.h"
 
+//Melodía al perder
+int melodiaMuerte[] = {NOTE_C5, NOTE_G4, NOTE_E4, NOTE_A3, NOTE_B3, NOTE_A3, NOTE_G3};
+int duracionNotas[] = {150, 150, 150, 150, 150, 150, 300};
+unsigned long tiempoUltimaNota = 0;
+int notaActual = 0;
+
+void reproducirMusicaMuerte() {
+  for (int i = 0; i < 7; i++) {
+    tone(PIN_BUZZER, melodiaMuerte[i], duracionNotas[i]);
+    delay(duracionNotas[i] * 1.3); //Usamos delay porque el juego ya terminó
+  };
+  noTone(PIN_BUZZER);
+}
+
+void musicaMenu() {
+  if (estadoActual != MENU) return; //Solo suena el menu
+
+  unsigned long tiempoActual = millis();
+  int melodia[] = {NOTE_C4, NOTE_E4, NOTE_G4, NOTE_C5};
+
+  if (tiempoActual - tiempoUltimaNota > 250) { //Velocidad de la nota
+    tone(PIN_BUZZER, melodia[notaActual], 100);
+    notaActual = (notaActual + 1) % 4; //Ciclo de 4 notas
+    tiempoUltimaNota = tiempoActual;
+  };
+}
+
+void musicaCrazyDriver() {
+  if (estadoActual != JUGANDO) return;
+
+  unsigned long tiempoActual = millis();
+  int melodia[] = {NOTE_C4, NOTE_E4};
+
+  if (tiempoActual - tiempoUltimaNota > 250) { //Velocidad de la nota
+    tone(PIN_BUZZER, melodia[notaActual], 100);
+    notaActual = (notaActual + 1) % 4; //Ciclo de 4 notas
+    tiempoUltimaNota = tiempoActual;
+  };
+}
+
 void inicializarObstaculos() {
   for (int i = 0; i < 3; i++) {
     listaObstaculos[i].activo = false;
@@ -169,7 +209,10 @@ void comprobarColisiones() {
         //CHOQUE
         sonarBuzzer(150);
         guardarPuntaje(score);
+        reproducirMusicaMuerte();
+
         estadoActual = GAMEOVER;
+
         if(score > highScore) {
           highScore = score;
         }

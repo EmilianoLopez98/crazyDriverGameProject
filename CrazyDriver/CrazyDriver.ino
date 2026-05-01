@@ -44,9 +44,11 @@ void loop() {
   else if (estadoActual == MENU) {
     manejarNavegacionMenu(analogRead(PIN_JOY_Y)); //Eje vertical
     dibujarMenu(opcionSeleccionada);
+    musicaMenu();
   }
   else if (estadoActual == MARCADORES) {
     dibujarMarcadores(highScore);
+    musicaMenu();
   }
   else if (estadoActual == PAUSA) {
     u8g2.drawStr(35, 35, "PAUSA");
@@ -73,6 +75,8 @@ void loop() {
         dibujarObstaculo(listaObstaculos[i].x, listaObstaculos[i].y);
       }
     };
+
+    musicaCrazyDriver();
 
     dibujarScore(score);
   }
