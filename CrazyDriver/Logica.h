@@ -18,16 +18,16 @@ void reproducirMusicaMuerte() {
 }
 
 void musicaMenu() {
-  if (estadoActual != MENU) return; //Solo suena el menu
+  if (estadoActual == MENU || estadoActual == MARCADORES) {
+    unsigned long tiempoActual = millis();
+    int melodia[] = {NOTE_C4, NOTE_E4, NOTE_G4, NOTE_C5};
 
-  unsigned long tiempoActual = millis();
-  int melodia[] = {NOTE_C4, NOTE_E4, NOTE_G4, NOTE_C5};
-
-  if (tiempoActual - tiempoUltimaNota > 250) { //Velocidad de la nota
-    tone(PIN_BUZZER, melodia[notaActual], 100);
-    notaActual = (notaActual + 1) % 4; //Ciclo de 4 notas
-    tiempoUltimaNota = tiempoActual;
-  };
+    if (tiempoActual - tiempoUltimaNota > 250) { //Velocidad de la nota
+      tone(PIN_BUZZER, melodia[notaActual], 100);
+      notaActual = (notaActual + 1) % 4; //Ciclo de 4 notas
+      tiempoUltimaNota = tiempoActual;
+    };
+  }
 }
 
 void musicaCrazyDriver() {
@@ -74,10 +74,10 @@ void intentarGenerarObstaculo() {
 }
 
 void reiniciarJuego() {
-  score = 0;
-  playerX = 60;
   inicializarObstaculos(); //Desactivamos todos los obstáculos
   tiempoUltimoObstaculo = millis();
+  score = 0;
+  playerX = 60;
 }
 
 void leerEntradas() {
