@@ -10,13 +10,24 @@ int opcionSeleccionada = 0;
 //Creamos un "pool" de 3 obstáculos máximo en pantalla para que sea fluido
 Obstaculo listaObstaculos[3]; //El array real "vive" aquí
 int score = 0;
+int highScore = 0;
 
 void setup() {
   Serial.begin(115200);
+
   u8g2.begin();
+
   pinMode(PIN_BTN_SEL, INPUT_PULLUP);
   pinMode(PIN_BTN_PAUSA, INPUT_PULLUP);
   pinMode(PIN_BUZZER, OUTPUT);
+
+  if (!SD.begin(PIN_SD_CS)) {
+    Serial.println("¡No se encontró la tarjeta SD!");
+  }
+  else {
+    Serial.println("Tarjeta SD lista.");
+    highScore = leerMejorPuntaje(); //Cargamos el récord al iniciar
+  }
 }
 
 void loop() {

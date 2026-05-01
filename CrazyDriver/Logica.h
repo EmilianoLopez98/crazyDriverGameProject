@@ -122,6 +122,35 @@ void actualizarPosicionObstaculos() {
   }
 }
 
+void guardarPuntaje(int nuevoPuntaje) {
+  //Intentar abrir el archivo de records/registros
+  File miArchivo = SD.open("/records.txt", FILE_APPEND);
+
+  if(miArchivo) {
+    miArchivo.println(nuevoPuntaje);
+    miArchivo.close();
+    Serial.println("Puntaje guardado en SD.");
+  }
+  else {
+    Serial.println("Error al abrir records.txt");
+  }
+}
+
+int leerMejorPuntaje() {
+  File miArchivo = SD.open("/records.txt");
+  int maxScore = 0;
+
+  if(miArchivo) {
+    while (miArchivo.available()) {
+      //Leemos cada línea y buscamos la más alta
+      int valorActual = miArchivo.readStringUntil('\n').toInt();
+      if (valorActual > maxScore) maxScore = valorActual;
+    }
+    miArchivo.close();
+  }
+  return maxScore;
+}
+
 void comprobarColisiones() {
   for (int i = 0; i < 3; i++) {
     //Revisamos si el obstáculo está en la pantalla
@@ -143,6 +172,7 @@ void comprobarColisiones() {
         sonarBuzzer(150);
         delay(500);
         estadoActual = GAMEOVER;
+        guardarPuntaje(score);
       };
     }
   }
