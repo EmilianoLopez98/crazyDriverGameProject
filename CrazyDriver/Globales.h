@@ -14,7 +14,7 @@
 #define PIN_SD_CS 5
 
 //Estados del juego
-enum Estado {INTRO, MENU, JUGANDO, PAUSA, GAMEOVER};
+enum Estado {INTRO, MENU, JUGANDO, PAUSA, GAMEOVER, MARCADORES};
 
 //Promesas. Cosas que existen en el juego, que le decimos al PC "buscalas"
 extern Estado estadoActual;

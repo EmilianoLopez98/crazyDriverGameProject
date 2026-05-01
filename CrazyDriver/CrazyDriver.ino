@@ -45,6 +45,9 @@ void loop() {
     manejarNavegacionMenu(analogRead(PIN_JOY_Y)); //Eje vertical
     dibujarMenu(opcionSeleccionada);
   }
+  else if (estadoActual == MARCADORES) {
+    dibujarMarcadores(highScore);
+  }
   else if (estadoActual == PAUSA) {
     u8g2.drawStr(35, 35, "PAUSA");
   }

@@ -58,4 +58,16 @@ void dibujarScore(int score) {
     u8g2.print(score);
 }
 
+void dibujarMarcadores(int record) {
+  u8g2.setFont(u8g2_font_haxrcorp4089_tr);
+  u8g2.drawStr(30, 20, "TOP RECORD");
+
+  u8g2.setFont(u8g2_font_ncenB14_tr); //Fuente grande para el número
+  u8g2.setCursor(45, 45);
+  u8g2.print(record);
+
+  u8g2.setFont(u8g2_font_5x7_tr);
+  u8g2.drawStr(1, 60, "BOTON ROJO PARA VOLVER");
+} 
+
 #endif

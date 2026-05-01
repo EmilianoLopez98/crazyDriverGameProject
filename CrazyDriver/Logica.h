@@ -22,7 +22,7 @@ void generarObstaculoAleatorio() {
 }
 
 unsigned long tiempoUltimoObstaculo = 0;
-const unsigned long invervaloAparicion = 1500; //1.5 segundos entre aparición de obstáculos
+const unsigned long invervaloAparicion = 800; //1.5 segundos entre aparición de obstáculos
 
 void intentarGenerarObstaculo() {
   unsigned long tiempoActual = millis();
@@ -58,11 +58,9 @@ void leerEntradas() {
     delay(200); //Debounce
     if (estadoActual == MENU) {
       if (opcionSeleccionada == 0) estadoActual = JUGANDO;
-      else if (opcionSeleccionada == 1) {
-        //Ir a pantalla de scores, pendiente
-      }
+      else if (opcionSeleccionada == 1) estadoActual = MARCADORES;
     }
-    else if (estadoActual == GAMEOVER) {
+    else if (estadoActual == GAMEOVER || estadoActual == MARCADORES) {
       reiniciarJuego();
       estadoActual = MENU;
     }
@@ -170,9 +168,12 @@ void comprobarColisiones() {
       if (choqueX && choqueY) {
         //CHOQUE
         sonarBuzzer(150);
-        delay(500);
-        estadoActual = GAMEOVER;
         guardarPuntaje(score);
+        estadoActual = GAMEOVER;
+        if(score > highScore) {
+          highScore = score;
+        }
+        delay(500);
       };
     }
   }
