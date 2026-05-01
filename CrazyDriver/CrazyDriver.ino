@@ -4,11 +4,12 @@
 #include "Logica.h"
 
 //Se le asigna memoria y valor inicial
-Estado estadoActual = MENU;
+Estado estadoActual = INTRO;
 int playerX = 60;
 int opcionSeleccionada = 0;
 //Creamos un "pool" de 3 obstáculos máximo en pantalla para que sea fluido
 Obstaculo listaObstaculos[3]; //El array real "vive" aquí
+int score = 0;
 
 void setup() {
   Serial.begin(115200);
@@ -26,36 +27,42 @@ void loop() {
   u8g2.clearBuffer();
 
   //Qué dibujar según el estado
-  if (estadoActual == MENU) {
+  if (estadoActual == INTRO) {
+    dibujarIntro();
+  }
+  else if (estadoActual == MENU) {
     manejarNavegacionMenu(analogRead(PIN_JOY_Y)); //Eje vertical
     dibujarMenu(opcionSeleccionada);
+  }
+  else if (estadoActual == PAUSA) {
+    u8g2.drawStr(35, 35, "PAUSA");
+  }
+  else if (estadoActual == GAMEOVER) {
+    u8g2.drawStr(25, 15, "HAZ PERDIDO");
+    u8g2.setCursor(40, 30);
+    u8g2.print("Puntos: ");
+    u8g2.print(score);
+    u8g2.drawStr(1, 50, "BOTON ROJO PARA REINICIAR");
   }
   else if (estadoActual == JUGANDO) {
     actualizarPosicionObstaculos(); //Mover obstáculos
     intentarGenerarObstaculo(); //Ver si toca generar/reutilizar uno nuevo
+    comprobarColisiones();
 
     int xJoy = analogRead(PIN_JOY_X); // Eje horizontal
     playerX = procesarJoystick(xJoy);
     
     dibujarJugador(playerX);
 
-    for (int i =0; i < 3; i++) {
+    for (int i = 0; i < 3; i++) {
       if (listaObstaculos[i].activo) {
         dibujarObstaculo(listaObstaculos[i].x, listaObstaculos[i].y);
       }
-    }
-  }
-  else if (estadoActual == PAUSA) {
-    u8g2.drawStr(40, 32, "PAUSA");
+    };
+
+    dibujarScore(score);
   }
 
   //Mostrar todo al usuario
   u8g2.sendBuffer();
-
-  Serial.println("");
-  Serial.println("");
-  Serial.print("Joystick X: ");
-  Serial.println(analogRead(PIN_JOY_X));
-  Serial.print("Joystick Y: ");
-  Serial.println(analogRead(PIN_JOY_Y));
 }

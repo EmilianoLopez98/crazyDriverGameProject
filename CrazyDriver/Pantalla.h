@@ -24,11 +24,38 @@ void dibujarMenu(int opcionSeleccionada) {
 
   //Movemos el puntero basados en una variable
   //Si es 0, y=20. Si es 1, y=40
-  int punteroY = (opcionSeleccionada == 0) ? 20 : 40;
+  int punteroY = (opcionSeleccionada == 0) ? 25 : 45;
   u8g2.drawStr(15, punteroY, ">");
 }
 
-void mostrarMenu();
-void mostrarIntro();
+void dibujarIntro() {
+  u8g2.clearBuffer(); // Siempre empezar limpiando
+  u8g2.setFont(u8g2_font_haxrcorp4089_tr);
+  
+  // Nombres del equipo
+  u8g2.drawStr(40, 20, "DED Team");
+  u8g2.drawStr(15, 35, "Diego, Emiliano y Dante");
+  u8g2.drawStr(35, 55, "Presentan...");
+  u8g2.sendBuffer(); // ¡Vital para que se vea!
+  
+  delay(3000);
+  
+  u8g2.clearBuffer();
+  // Cambiamos a una fuente un poco más grande/negrita para el título
+  u8g2.setFont(u8g2_font_ncenB10_tr); 
+  u8g2.drawStr(3, 35, "CRAZY DRIVER");
+  u8g2.sendBuffer();
+  
+  delay(2000);
+  
+  estadoActual = MENU; // Al final del intro, saltamos al menú
+}
+
+void dibujarScore(int score) {
+    u8g2.setFont(u8g2_font_5x7_tr);
+    u8g2.setCursor(0, 7);
+    u8g2.print("Score: ");
+    u8g2.print(score);
+}
 
 #endif

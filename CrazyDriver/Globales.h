@@ -12,10 +12,13 @@
 
 //Estados del juego
 enum Estado {INTRO, MENU, JUGANDO, PAUSA, GAMEOVER};
+
 //Promesas. Cosas que existen en el juego, que le decimos al PC "buscalas"
 extern Estado estadoActual;
 extern int playerX;
 extern int opcionSeleccionada;
+extern int score;
+
 //También lista de obstáculos para que el .ino pueda dibujarlos
 struct Obstaculo {
   int x;
